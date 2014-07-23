@@ -17,15 +17,17 @@ def main():
     if not os.path.exists(source_folder):
         print ('Folder %s does not exist' % source_folder)
         sys.exit(1)
+    
     destination_folder= input('Please enter a destination folder\n')
     if not os.path.exists(destination_folder):
-        create_folder = input('Folder %s does not exist, create new folder, yes or no\n')
+        create_folder = input('Folder %s does not exist, create new folder, yes or no\n' %destination_folder)
         if not create_folder =='yes' and not create_folder =='y':
             print('Aborting program')
             sys.exit(1)
         else:
             os.mkdir(destination_folder)
-            print('folder %s created')
+            print('folder %s created' %destination_folder)
+
 if __name__ == "__main__":
   main()
 	 
