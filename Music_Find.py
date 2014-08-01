@@ -1,4 +1,4 @@
-# Chris Rios
+# Author:Chris Rios
 # Finds the specified file type, either .mp3, .flac, .wav, or all 3, and copies it to a speicfied folder.
 
 import sys
@@ -6,22 +6,33 @@ import re
 import os
 import shutil
 
+music_list={}
 
 def folder_crawler(dir_name,file_type):
-    '''Explores all folders and sub folders for the speicified file type'''
+    '''Explores all folders and sub folders for the speicified file type, composes a dictionary of all files names, 
+       sizes and paths'''
     paths = os.listdir(dir_name)
-    print(paths)
+    
     for path in paths:
+        path = os.path.basename(path)         
+        abs_path = os.path.abspath(os.path.join(dir_name,path))
+        
         if path.endswith(file_type):
-            print("found an mp3 called %s in %s" %(path,dir_name))
+            if  not path in music_list:
+              music_list[path] = (abs_path,os.path.getsize(abs_path)) 
+            elif not os.path.getsize(abs_path) == music_list[path][1]:
+                print("already have %s" %path)
+                music_list[path] = (abs_path,os.path.getsize(abs_path))
+            else:
+                print("i will figure it out")
+        
         elif os.path.isdir(os.path.join(dir_name,path)) and not path.startswith("."):
-            print("found a directory %s" %path)
             folder_crawler(os.path.join(dir_name,path),file_type)
-            print("finished with %s" %path)
-        else:
-            print("%s is not an %s or a directory" %(path,file_type))    
 
-
+def copy_list(to_dir):
+    for song in music_list:
+      print(os.path.basename(song))
+      #shutil.copy(song, os.path.join(to_dir, fname))
 
 
 def main():
@@ -48,7 +59,8 @@ def main():
             folder_crawler(source_folder,file_type)
     else:
         folder_crawler(source_folder,file_type)
-
+    print(music_list)
+    copy_list(destination_folder)
 
 if __name__ == "__main__":
   main()
