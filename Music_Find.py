@@ -38,10 +38,9 @@ def folder_crawler(dir_name,file_type):
             folder_crawler(os.path.join(dir_name,path),file_type)
 
 def copy_list(to_dir):
-    for song in music_list:
-      fname = music_list[song][0]
-      print("Attempting to copy %s" %fname)
-      shutil.copy(music_list[song][0], os.path.join(to_dir, song))
+    for song,(path,_) in music_list.items():
+        print("Attempting to copy %s" %song)
+        shutil.copy(path, os.path.join(to_dir, song))
 
 
 def main():
