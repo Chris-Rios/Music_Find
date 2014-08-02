@@ -21,18 +21,27 @@ def folder_crawler(dir_name,file_type):
             if  not path in music_list:
               music_list[path] = (abs_path,os.path.getsize(abs_path)) 
             elif not os.path.getsize(abs_path) == music_list[path][1]:
-                print("already have %s" %path)
+                inserted = False;
+                while not inserted:
+                    counter = 1
+                    path=path[:path.index('.')]+'(%s)' %str(counter)+path[path.index('.'):]
+                    if not path in music_list:
+                        music_list[path] = (abs_path,os.path.getsize(abs_path))
+                        inserted = True
+                    elif not os.path.getsize(abs_path) == music_list[path][1]:
+                        counter += 1
+                    else:
+                        break 
                 music_list[path] = (abs_path,os.path.getsize(abs_path))
-            else:
-                print("i will figure it out")
         
         elif os.path.isdir(os.path.join(dir_name,path)) and not path.startswith("."):
             folder_crawler(os.path.join(dir_name,path),file_type)
 
 def copy_list(to_dir):
     for song in music_list:
-      print(os.path.basename(song))
-      #shutil.copy(song, os.path.join(to_dir, fname))
+      fname = music_list[song][0]
+      print("Attempting to copy %s" %fname)
+      shutil.copy(music_list[song][0], os.path.join(to_dir, song))
 
 
 def main():
@@ -59,7 +68,6 @@ def main():
             folder_crawler(source_folder,file_type)
     else:
         folder_crawler(source_folder,file_type)
-    print(music_list)
     copy_list(destination_folder)
 
 if __name__ == "__main__":
